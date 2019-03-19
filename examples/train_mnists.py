@@ -6,9 +6,9 @@ import traceback
 import torch
 from torch import optim
 
-import utils
-from npmodel import NPModel
-from mnists import NPMnistReader, NPBatches, save_yimages
+import npmodel.utils as utils
+from npmodel.model import NPModel
+from npmodel.datasets.mnists import NPMnistReader, NPBatches, save_yimages
 
 
 def get_args():

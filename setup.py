@@ -26,7 +26,7 @@ setuptools.setup(
     license='MIT',
 
     # Package info
-    packages=setuptools.find_packages(exclude=('test', 'train_toy.py', 'train_mnists.py')),
+    packages=setuptools.find_packages(exclude=('test', 'examples')),
 
     zip_safe=True,
     install_requires=requirements,

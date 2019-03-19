@@ -2,9 +2,9 @@ import argparse
 import torch
 from torch import optim
 
-import utils
-from npmodel import NPModel
-from toydataset import GPCurvesReader, save_functions
+import npmodel.utils as utils
+from npmodel.model import NPModel
+from npmodel.datasets.toydataset import GPCurvesReader, save_functions
 
 
 def get_args():
