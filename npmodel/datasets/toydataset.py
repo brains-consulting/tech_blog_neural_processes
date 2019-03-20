@@ -105,7 +105,7 @@ def saveimg_xy(name, context_x, context_y, target_x, target_y):
     plt.savefig(f"{name}.png")
 
 
-def save_functions(file_name, context_x, context_y, target_x, target_y, pred_y, std):
+def show_functions(file_name, context_x, context_y, target_x, target_y, pred_y, std, view: bool):
     plt.clf()
     xc = context_x[0, :, 0].cpu().numpy()
     yc = context_y[0, :, 0].cpu().numpy()
@@ -125,8 +125,10 @@ def save_functions(file_name, context_x, context_y, target_x, target_y, pred_y, 
     plt.ylim([-2, 2])
     plt.grid(False)
     ax = plt.gca()
-    # plt.show()
-    plt.savefig(f"{file_name}")
+    if view:
+        plt.show()
+    else:
+        plt.savefig(f"{file_name}")
 
 
 if __name__ == "__main__":

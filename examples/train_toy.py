@@ -4,7 +4,7 @@ from torch import optim
 
 import npmodel.utils as utils
 from npmodel.model import NPModel
-from npmodel.datasets.toydataset import GPCurvesReader, save_functions
+from npmodel.datasets.toydataset import GPCurvesReader, show_functions
 
 
 def get_args():
@@ -21,6 +21,8 @@ def get_args():
                         help='random seed (default: 777)')
     parser.add_argument('--log-interval', type=int, default=1000, metavar='N',
                         help='how many batches to wait before logging training status')
+    parser.add_argument('--view', default=False, action="store_true",
+                        help='show graphs on windows instead of saving to image files (default: False)')
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     return args
@@ -66,7 +68,7 @@ def train(model, optimizer, epoch, npcfg):
         p.parent.mkdir(parents=True, exist_ok=True)
         with torch.no_grad():
             yhatT, sgm = model.predict(*testset[:3])
-        save_functions(file_name, *testset, yhatT, sgm)
+        show_functions(file_name, *testset, yhatT, sgm, npcfg.view)
 
 
 def make_dataset(gpr):
@@ -98,11 +100,11 @@ if __name__ == "__main__":
 
     import collections
     NPTrainConfig = collections.namedtuple(
-        "NPTrainConfig", ("trainset", "train_gpr", "test_gpr", "log_interval", "max_epoch")
+        "NPTrainConfig", ("trainset", "train_gpr", "test_gpr", "log_interval", "max_epoch", "view")
     )
     npcfg = NPTrainConfig(
         trainset=trainset, train_gpr=train_gpr, test_gpr=test_gpr,
-        log_interval=args.log_interval, max_epoch=args.epochs
+        log_interval=args.log_interval, max_epoch=args.epochs, view=args.view,
     )
 
     hidden_size = 128
