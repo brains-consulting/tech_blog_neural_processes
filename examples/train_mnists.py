@@ -61,7 +61,7 @@ class Trainer(object):
         self.loss_meter = utils.AverageMeter()
 
     def get_dims(self):
-        itm = next(iter(trainer.train_reader))
+        itm = next(iter(self.train_reader))
         return itm.dims()   # xC_size, yC_size, xT_size, yT_size
 
     def run_train(self, model, optimizer):
