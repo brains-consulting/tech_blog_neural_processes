@@ -19,8 +19,8 @@ def get_args():
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='enables CUDA training')
-    parser.add_argument('--gpu', type=int, default=1, metavar='N',
-                        help='gpu number (default: 1), if no-cuda, ignore this option.')
+    parser.add_argument('--gpu', type=int, default=0, metavar='N',
+                        help='gpu number (default: 0), if no-cuda, ignore this option.')
     parser.add_argument('--seed', type=int, default=777, metavar='S',
                         help='random seed (default: 777)')
     parser.add_argument('--log-interval', type=int, default=10, metavar='N',
