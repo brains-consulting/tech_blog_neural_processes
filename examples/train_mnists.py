@@ -130,6 +130,7 @@ class Trainer(object):
 
 if __name__ == "__main__":
     args = get_args()
+    utils.print_params(args)
     device = torch.device(f"cuda:{args.gpu}" if args.cuda else "cpu")
     if args.seed >= 0:
         torch.manual_seed(args.seed)

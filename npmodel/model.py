@@ -173,6 +173,11 @@ class NPModel(nn.Module):
             z_size += embed_layers[-1]
         self.decoder = NPDecoder(xT_size, z_size, decoder_layers)
         self.device = torch.device("cpu")
+        self.visdom = False
+
+    def use_visdom(self):
+        self.visdom = True
+        return
 
     def encode_context(self, xC, yC):
         rC = self.embedder_C(xC, yC)
@@ -234,6 +239,9 @@ class NPModel(nn.Module):
     _func_plotter = None
 
     def plot_prediction(self, bidx, xC, yC, xT, yT):
+        if not self.visdom:
+            return
+
         # to check kl collapse or not
         import npmodel.utils as utils
         p = self._func_plotter
@@ -255,7 +263,7 @@ class NPModel(nn.Module):
                           yC[bidx, :, 0].cpu().numpy(), f"y[{bidx}]", "yC", color=(128, 128, 128))
                 import time
                 time.sleep(0.2)
-        return yhatT, sgm
+        return
 
     def to(self, device):
         self.embedder_C = self.embedder_C.to(device)

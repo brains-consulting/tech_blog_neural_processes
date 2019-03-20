@@ -3,6 +3,17 @@ from visdom import Visdom
 from abc import ABCMeta, abstractmethod
 
 
+def print_params(args):
+    print("-" * 25)
+    for k, v in sorted(args.__dict__.items()):
+        if k.startswith("_"):
+            continue
+        if k.startswith("no"):
+            continue
+        print(f"params.{k}: {v}")
+    print("-" * 5)
+
+
 class VisdomPlotterInterface(metaclass=ABCMeta):
     @abstractmethod
     def plot(self, x_label, y_label, legend_name, title_name, x, y, reset=False):

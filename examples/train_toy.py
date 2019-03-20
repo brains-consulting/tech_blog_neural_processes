@@ -90,6 +90,8 @@ def make_dataset(gpr):
 
 if __name__ == "__main__":
     args = get_args()
+    utils.print_params(args)
+
     device = torch.device(f"cuda:{args.gpu}" if args.cuda else "cpu")
     if args.seed >= 0:
         torch.manual_seed(args.seed)
@@ -129,6 +131,7 @@ if __name__ == "__main__":
     # plotter = utils.VisdomLinePlotter(env_name='np')
     if args.visdom:
         plotter = utils.VisdomLinePlotter(env_name='main')
+        model.use_visdom()
     else:
         plotter = utils.FakeVisdomPlotter(env_name='main')
 
