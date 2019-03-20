@@ -32,6 +32,8 @@ def get_args():
                              ', if negative use whole dataset (default: 1000)')
     parser.add_argument('--view', default=False, action="store_true",
                         help='show graphs on windows instead of saving to image files (default: False)')
+    parser.add_argument('--visdom', default=False, action="store_true",
+                        help='connecting the visdom server (default: False)')
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     return args
@@ -52,7 +54,10 @@ class Trainer(object):
         self.model = None
         self.optimizer = None
 
-        self.plotter = utils.VisdomLinePlotter(env_name=self.train_params.env_name)
+        if train_params.visdom:
+            self.plotter = utils.VisdomLinePlotter(env_name=self.train_params.env_name)
+        else:
+            self.plotter = utils.FakeVisdomPlotter(env_name=self.train_params.env_name)
         self.loss_meter = utils.AverageMeter()
 
     def get_dims(self):
@@ -131,11 +136,12 @@ if __name__ == "__main__":
 
     batch_size = 20
     TrainParameters = collections.namedtuple(
-        "TrainParameters", ("batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "seed", "view", "device")
+        "TrainParameters",
+        ("batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "visdom", "seed", "view", "device")
     )
     train_params = TrainParameters(
         batch_size=batch_size, env_name="main",
-        log_interval=args.log_interval, max_epoch=args.epochs, fix_iter=args.fix_iter,
+        log_interval=args.log_interval, max_epoch=args.epochs, fix_iter=args.fix_iter, visdom=args.visdom,
         seed=args.seed, view=args.view, device=device
     )
     trainer = Trainer(train_params)

@@ -23,6 +23,8 @@ def get_args():
                         help='how many batches to wait before logging training status')
     parser.add_argument('--view', default=False, action="store_true",
                         help='show graphs on windows instead of saving to image files (default: False)')
+    parser.add_argument('--visdom', default=False, action="store_true",
+                        help='connecting the visdom server (default: False)')
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     return args
@@ -125,7 +127,11 @@ if __name__ == "__main__":
 
     global plotter
     # plotter = utils.VisdomLinePlotter(env_name='np')
-    plotter = utils.VisdomLinePlotter(env_name='main')
+    if args.visdom:
+        plotter = utils.VisdomLinePlotter(env_name='main')
+    else:
+        plotter = utils.FakeVisdomPlotter(env_name='main')
+
 
     global loss_meter
     loss_meter = utils.AverageMeter()

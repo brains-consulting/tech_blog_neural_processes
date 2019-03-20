@@ -1,8 +1,19 @@
 import numpy
 from visdom import Visdom
+from abc import ABCMeta, abstractmethod
 
 
-class VisdomLinePlotter(object):
+class VisdomPlotterInterface(metaclass=ABCMeta):
+    @abstractmethod
+    def plot(self, x_label, y_label, legend_name, title_name, x, y, reset=False):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def scatter(self, x, y, y_label, legend_name, color=(0, 0, 0)):
+        raise NotImplementedError()
+
+
+class VisdomLinePlotter(VisdomPlotterInterface):
     """Plots to Visdom"""
     def __init__(self, env_name='main', port=8097, server="localhost"):
         self.viz = Visdom(port=port, server=server)
@@ -44,6 +55,19 @@ class VisdomLinePlotter(object):
                          name=legend_name,
                          update='append',
                          win=win)
+
+
+class FakeVisdomPlotter(VisdomPlotterInterface):
+    """Fake Plotter"""
+    def __init__(self, env_name='main', port=8097, server="localhost"):
+        self.env = env_name
+
+    def plot(self, *args, **kwargs):
+        pass    # Do Nothing
+
+    def scatter(self, args, **kwargs):
+        pass    # Do Nothing
+
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
