@@ -26,7 +26,7 @@ def get_args():
     parser.add_argument('--visdom', default=False, action="store_true",
                         help='connecting the visdom server (default: False)')
     args = parser.parse_args()
-    args.cuda = not args.no_cuda and torch.cuda.is_available()
+    args.cuda = not args.no_cuda and torch.cuda.is_available() and (args.gpu >= 0)
     return args
 
 
