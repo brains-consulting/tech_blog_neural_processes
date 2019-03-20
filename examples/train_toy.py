@@ -9,8 +9,8 @@ from npmodel.datasets.toydataset import GPCurvesReader, show_functions
 
 def get_args():
     parser = argparse.ArgumentParser(description='VAE MNIST Example')
-    parser.add_argument('--batch-size', type=int, default=8, metavar='N',
-                        help='input batch size for training (default: 8)')
+    parser.add_argument('--batch-size', type=int, default=16, metavar='N',
+                        help='input batch size for training (default: 16)')
     parser.add_argument('--epochs', type=int, default=100000, metavar='N',
                         help='number of epochs to train (default: 100000)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
@@ -96,8 +96,7 @@ if __name__ == "__main__":
     if args.seed >= 0:
         torch.manual_seed(args.seed)
 
-    batch_size = 16
-    train_gpr = GPCurvesReader(batch_size=batch_size, max_num_context=50, testing=False)
+    train_gpr = GPCurvesReader(batch_size=args.batch_size, max_num_context=50, testing=False)
     test_gpr = GPCurvesReader(batch_size=1, max_num_context=50, testing=True)
     trainset, train_sizes = make_dataset(train_gpr)
     xC_size, yC_size, xT_size, yT_size = train_sizes

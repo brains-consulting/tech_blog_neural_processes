@@ -13,7 +13,7 @@ from npmodel.datasets.mnists import NPMnistReader, NPBatches, show_yimages
 
 def get_args():
     parser = argparse.ArgumentParser(description='VAE MNIST Example')
-    parser.add_argument('--batch-size', type=int, default=8, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=20, metavar='N',
                         help='input batch size for training (default: 8)')
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 10)')
@@ -135,13 +135,12 @@ if __name__ == "__main__":
     if args.seed >= 0:
         torch.manual_seed(args.seed)
 
-    batch_size = 20
     TrainParameters = collections.namedtuple(
         "TrainParameters",
         ("batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "visdom", "seed", "view", "device")
     )
     train_params = TrainParameters(
-        batch_size=batch_size, env_name="main",
+        batch_size=args.batch_size, env_name="main",
         log_interval=args.log_interval, max_epoch=args.epochs, fix_iter=args.fix_iter, visdom=args.visdom,
         seed=args.seed, view=args.view, device=device
     )
