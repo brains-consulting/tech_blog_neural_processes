@@ -235,7 +235,7 @@ class NPModel(nn.Module):
 
     def plot_prediction(self, bidx, xC, yC, xT, yT):
         # to check kl collapse or not
-        import utils
+        import npmodel.utils as utils
         p = self._func_plotter
         if p is None:
             p = utils.VisdomLinePlotter(env_name='main')
