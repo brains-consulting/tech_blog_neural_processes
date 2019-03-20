@@ -65,7 +65,7 @@ class Trainer(object):
         return itm.dims()   # xC_size, yC_size, xT_size, yT_size
 
     def run_train(self, model, optimizer):
-        for epoch in range(1, args.epochs + 1):
+        for epoch in range(1, self.train_params.max_epoch + 1):
             self.train_epoch(epoch, model, optimizer)
 
     def train_epoch(self, epoch, model, optimizer):
