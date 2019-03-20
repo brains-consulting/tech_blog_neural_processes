@@ -8,7 +8,7 @@ from torch import optim
 
 import npmodel.utils as utils
 from npmodel.model import NPModel
-from npmodel.datasets.mnists import NPMnistReader, NPBatches, save_yimages
+from npmodel.datasets.mnists import NPMnistReader, NPBatches, show_yimages
 
 
 def get_args():
@@ -27,6 +27,11 @@ def get_args():
                         help='how many batches to wait before logging training status')
     parser.add_argument('--dataset', type=str, default="mnist", choices=["mnist", "fashion"], metavar='S',
                         help='dataset name like "mnist", "fashion-mnist", default: "mnist"')
+    parser.add_argument('--fix-iter', type=int, default=1000, metavar='N',
+                        help='the number of training iteration with a fixed sampling dataset/imageset batch'
+                             ', if negative use whole dataset (default: 1000)')
+    parser.add_argument('--view', default=False, action="store_true",
+                        help='show graphs on windows instead of saving to image files (default: False)')
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     return args
@@ -39,9 +44,7 @@ class Trainer(object):
         batch_size, device = train_params.batch_size, train_params.device
         seed = train_params.seed
         params = dict(
-            shuffle=True, seed=seed,
-            mnist_type="mnist", fix_iter=10000,
-            device=device,
+            shuffle=True, seed=seed, mnist_type="mnist", fix_iter=train_params.fix_iter, device=device,
         )
         self.train_reader = NPMnistReader(batch_size=batch_size, testing=False, **params)
         self.test_reader = NPMnistReader(batch_size=batch_size, testing=True, **params)
@@ -117,7 +120,7 @@ class Trainer(object):
             img_yC = self.train_reader.convert_to_img(xC, yC)
             img_yT = self.train_reader.convert_to_img(xT, yT)
             img_yhat = self.train_reader.convert_to_img(xT, yhatT)
-            save_yimages(img_yC, img_yT, img_yhat, file_name)
+            show_yimages(img_yC, img_yT, img_yhat, file_name, self.train_params.view)
 
 
 if __name__ == "__main__":
@@ -126,15 +129,14 @@ if __name__ == "__main__":
     if args.seed >= 0:
         torch.manual_seed(args.seed)
 
-    batch_size = 30
+    batch_size = 20
     TrainParameters = collections.namedtuple(
-        "TrainParameters", ("batch_size", "env_name", "log_interval", "max_epoch", "seed", "device")
+        "TrainParameters", ("batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "seed", "view", "device")
     )
     train_params = TrainParameters(
         batch_size=batch_size, env_name="main",
-        log_interval=args.log_interval, max_epoch=args.epochs,
-        seed=args.seed,
-        device=device
+        log_interval=args.log_interval, max_epoch=args.epochs, fix_iter=args.fix_iter,
+        seed=args.seed, view=args.view, device=device
     )
     trainer = Trainer(train_params)
     xC_dim, yC_dim, xT_dim, yT_dim = trainer.get_dims()

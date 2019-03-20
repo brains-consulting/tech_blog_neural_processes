@@ -143,7 +143,7 @@ class NPMnistReader(object):
         return d.data.cpu().numpy().astype(numpy.uint8)
 
 
-def save_yimages(img_c, img_t, img_p=None, img_file="y.png"):
+def show_yimages(img_c, img_t, img_p=None, img_file="y.png", view=False):
     plt.clf()
     B = img_c.shape[0]
     n_row = 2 if img_p is None else 3
@@ -156,7 +156,10 @@ def save_yimages(img_c, img_t, img_p=None, img_file="y.png"):
             continue
         plt.subplot(B, n_row, b*n_row+3)
         show_image(img_p[b])
-    plt.savefig(img_file)
+    if view:
+        plt.show()
+    else:
+        plt.savefig(img_file)
     return
 
 
@@ -180,7 +183,7 @@ if __name__ == "__main__":
             img_t = npr.convert_to_img(target_y, target_y)
             p = pathlib.Path(f"img_fm/{name}_{b:05d}.png")
             p.parent.mkdir(parents=True, exist_ok=True)
-            save_yimages(img_c, img_t, img_file=str(p))
+            show_yimages(img_c, img_t, img_file=str(p))
             return
 
         itm = next(iter(npr))
