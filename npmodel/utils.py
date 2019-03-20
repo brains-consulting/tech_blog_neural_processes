@@ -3,14 +3,20 @@ from visdom import Visdom
 from abc import ABCMeta, abstractmethod
 
 
-def print_params(args):
+def print_params(args, g=globals()):
+    name = "params"
+    for nm, vr in g.items():
+        if id(vr) == id(args):
+            name = nm
+            break
+
     print("-" * 25)
     for k, v in sorted(args.__dict__.items()):
         if k.startswith("_"):
             continue
         if k.startswith("no"):
             continue
-        print(f"params.{k}: {v}")
+        print(f"{name}.{k}: {v}")
     print("-" * 5)
 
 

@@ -90,7 +90,7 @@ def make_dataset(gpr):
 
 if __name__ == "__main__":
     args = get_args()
-    utils.print_params(args)
+    utils.print_params(args, locals())
 
     device = torch.device(f"cuda:{args.gpu}" if args.cuda else "cpu")
     if args.seed >= 0:
