@@ -91,9 +91,6 @@ class Trainer(object):
             optimizer.step(loss_closure)
             self.loss_meter.update(loss.item())
 
-            if epoch % train_params.log_interval == 0 and b == 0:
-                self.save_images(epoch, "train", train_itm)
-
         # by epoch
         try:
             print(f"Train Epoch {epoch:05d}/{train_params.max_epoch:05d} loss: {self.loss_meter.avg:.6f}")
@@ -106,6 +103,10 @@ class Trainer(object):
             self.loss_meter.reset()     # by every epoch
 
         if epoch % train_params.log_interval == 0:
+            train_itr = iter(self.train_reader)
+            train_itm = next(train_itr)
+            self.save_images(epoch, "train", train_itm)
+
             try:
                 test_itm = next(test_itr)
             except StopIteration:
