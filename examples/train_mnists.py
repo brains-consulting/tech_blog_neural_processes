@@ -96,7 +96,7 @@ class Trainer(object):
 
         # by epoch
         try:
-            print(f"Train Epoch {epoch:05d}/{train_params.max_epoch:05d}: {self.loss_meter.avg:.6f}")
+            print(f"Train Epoch {epoch:05d}/{train_params.max_epoch:05d} loss: {self.loss_meter.avg:.6f}")
 
             # if visdom server running, plot loss values
             self.plotter.plot("epoch", "loss", "train", "Epoch - Loss", [epoch], [self.loss_meter.avg], reset=False)
