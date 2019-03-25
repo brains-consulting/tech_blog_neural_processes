@@ -107,10 +107,12 @@ class Trainer(object):
             self.loss_meter.reset()     # by every epoch
 
         if epoch % train_params.log_interval == 0:
+            print(f"convert trainset to images ...")
             train_itr = iter(self.train_reader)
             train_itm = next(train_itr)
             self.save_images(epoch, "train", train_itm)
 
+            print(f"convert testset to images ...")
             try:
                 test_itm = next(test_itr)
             except StopIteration:
