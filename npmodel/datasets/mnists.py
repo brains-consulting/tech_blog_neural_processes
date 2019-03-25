@@ -66,7 +66,7 @@ class NPMnistReader(object):
         self.cur = -1
         self.cnt = -1
         self.rnds = numpy.random.RandomState(seed)
-        self._shuffled = False
+        self._shuffled = []
 
     @property
     def batch_size(self):
@@ -74,15 +74,14 @@ class NPMnistReader(object):
 
     def __iter__(self):
         if self._shuffle:
-            if self.fix_iter <= 0 or (not self._shuffle):
+            if self.fix_iter <= 0 or (len(self._shuffled) <= 0):
                 # if fix_iter > 0, then shuffle only when hasn't been shuffled yet
-                shuffled = self.rnds.permutation(len(self.mnist.data))
-            self.mnist.data = self.mnist.data[shuffled]
+                self._shuffled = self.rnds.permutation(len(self.mnist.data))
+            self.mnist.data = self.mnist.data[self._shuffled]
         self.img_shape = self.mnist.data.shape[1:]
         self.n_data = self.mnist.data.shape[0]
         self.cur = -self._batch_size
         self.cnt = -1
-        self._shuffled = True
         return self
 
     def __next__(self) -> NPBatches:
