@@ -13,6 +13,8 @@ from npmodel.datasets.mnists import NPMnistReader, NPBatches, show_yimages
 
 def get_args():
     parser = argparse.ArgumentParser(description='VAE MNIST Example')
+    parser.add_argument('--lr', type=float, default=1e-4, metavar='F',
+                        help='learning rate (default: 1e-4)')
     parser.add_argument('--batch-size', type=int, default=20, metavar='N',
                         help='input batch size for training (default: 8)')
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
@@ -93,7 +95,9 @@ class Trainer(object):
 
         # by epoch
         try:
-            print(f"Train Epoch {epoch:05d}/{train_params.max_epoch:05d} loss: {self.loss_meter.avg:.6f}")
+            from datetime import datetime
+            nw = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            print(f"{nw} Train Epoch {epoch:05d}/{train_params.max_epoch:05d} loss: {self.loss_meter.avg:.6f}")
 
             # if visdom server running, plot loss values
             self.plotter.plot("epoch", "loss", "train", "Epoch - Loss", [epoch], [self.loss_meter.avg], reset=False)
@@ -155,13 +159,14 @@ if __name__ == "__main__":
         xT_size=xT_dim,
         yT_size=yT_dim,
         z_size=hidden_size,
-        embed_layers=[hidden_size]*3,
-        latent_encoder_layers=[hidden_size]*1,
+        embed_layers=[512, 256, 128],
+        latent_encoder_layers=[128, 256],
         deterministic_layers=[hidden_size]*4,
-        decoder_layers=[hidden_size]*2 + [yT_dim],
         use_deterministic_path=False,
+        decoder_layers=[128, 256, 512] + [yT_dim],
+        decout_fn=torch.sigmoid,
     )
 
     model = NPModel(**model_params).to(device)
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
     trainer.run_train(model, optimizer)

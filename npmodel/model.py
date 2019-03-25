@@ -159,7 +159,7 @@ class NPDecoder(nn.Module):
 class NPModel(nn.Module):
     def __init__(self, xC_size, yC_size, xT_size, yT_size, z_size, use_deterministic_path=False,
                  embed_layers=[32, 64, 28], latent_encoder_layers=[28, 32],
-                 deterministic_layers=[18, 33], decoder_layers=[32, 64]):
+                 deterministic_layers=[18, 33], decoder_layers=[32, 64], decout_fn=None):
         super().__init__()
 
         self.use_deterministic_path = use_deterministic_path
@@ -172,6 +172,7 @@ class NPModel(nn.Module):
             self.deterministic_encoder = self.embedder_C
             z_size += embed_layers[-1]
         self.decoder = NPDecoder(xT_size, z_size, decoder_layers)
+        self.decout_fn = decout_fn
         self.device = torch.device("cpu")
         self.visdom = False
 
@@ -205,6 +206,8 @@ class NPModel(nn.Module):
     def decode_context(self, xT, zC):
         T = xT.shape[1]
         yhatT, sgm = self.decoder(xT, zC.repeat(1, T, 1))
+        if self.decout_fn is not None:
+            yhatT = self.decout_fn(yhatT)
         return yhatT, sgm
 
     @staticmethod
