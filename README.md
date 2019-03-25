@@ -10,6 +10,7 @@ pip install git+https://github.com/brains-consulting/tech_blog_neural_processes
 
 ## run examples
 
+### preparation
 clone the repository
 ```bash
 git clone https://github.com/brains-consulting/tech_blog_neural_processes
