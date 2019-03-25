@@ -158,13 +158,10 @@ def show_yimages(img_c, img_t, img_p=None, title="y", img_file="y.png", view=Fal
         for idx, y in enumerate(ys):
             plt.subplot(1, 3, idx+1)
             show_image(y[b])
-        plt.savefig(_img_file)
-
-
-    if view:
-        plt.show()
-    else:
-        plt.savefig(img_file)
+        if view:
+            plt.show()
+        else:
+            plt.savefig(_img_file)
     return
 
 
