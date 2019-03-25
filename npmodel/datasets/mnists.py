@@ -46,7 +46,7 @@ class NPBatches(object):
 
 
 class NPMnistReader(object):
-    def __init__(self, batch_size, testing=False, shuffle=False,seed=777,
+    def __init__(self, batch_size, testing=False, shuffle=False, seed=777,
                  mnist_type="mnist", fix_iter=-1, device=torch.device("cpu")):
         self._batch_size = batch_size
         self._testing = testing
@@ -75,9 +75,9 @@ class NPMnistReader(object):
     def __iter__(self):
         if self._shuffle:
             if self.fix_iter <= 0 or (len(self._shuffled) <= 0):
-                # if fix_iter > 0, then shuffle only when hasn't been shuffled yet
+                # if fix_iter > 0, then do shuffle only when hasn't been shuffled yet
                 self._shuffled = self.rnds.permutation(len(self.mnist.data))
-            self.mnist.data = self.mnist.data[self._shuffled]
+                self.mnist.data = self.mnist.data[self._shuffled]
         self.img_shape = self.mnist.data.shape[1:]
         self.n_data = self.mnist.data.shape[0]
         self.cur = -self._batch_size
