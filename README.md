@@ -1,5 +1,6 @@
 # tech blog neural processes
 An implementation of the Neural Processes
+tech blog: https://blog.brains-consulting.tech/
 
 ## Usage
 install the package
@@ -24,12 +25,12 @@ python train_toy.py --epochs=20000 --log-interval=1000
 ### MNIST
 run the mnist dataset sample
 ```bash
-python train_toy.py --epochs=100 --log-interval=10 --dataset="mnist"
+python train_toy.py --lr=0.001 --batch-size=30 --epochs=500 --log-interval=100 --fix-iter=100 --dataset="mnist"
 ```
 
 ### Fashion-MNIST
 run the fashion-mnist dataset sample
 ```bash
-python train_toy.py --epochs=100 --log-interval=10 --dataset="fashion"
+python train_toy.py --lr=0.001 --batch-size=30 --epochs=500 --log-interval=100 --fix-iter=100 --dataset="fashion"
 ```
 
