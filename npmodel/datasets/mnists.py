@@ -1,5 +1,7 @@
 import numpy
 import itertools
+import pathlib
+
 import torch
 import torch.utils.data
 import collections
@@ -83,7 +85,8 @@ class NPMnistReader(object):
 
     def __next__(self) -> NPBatches:
         num_target = self.img_shape.numel()
-        num_context = torch.randint(num_target//2, num_target, size=(1,))[0]
+        target_interval = [int(num_target*0.25), int(num_target*0.75)]
+        num_context = torch.randint(*target_interval, size=(1,))[0]
         num_context = num_context.numpy()
         if self.fix_iter <= 0:
             self.cur += self._batch_size
@@ -143,19 +146,20 @@ class NPMnistReader(object):
         return d.data.cpu().numpy().astype(numpy.uint8)
 
 
-def show_yimages(img_c, img_t, img_p=None, img_file="y.png", view=False):
-    plt.clf()
+def show_yimages(img_c, img_t, img_p=None, title="y", img_file="y.png", view=False):
     B = img_c.shape[0]
-    n_row = 2 if img_p is None else 3
+    p = pathlib.Path(img_file)
+    ys = [img_c] + ([] if img_p is None else [img_p]) + [img_t]
     for b in range(B):
-        plt.subplot(B, n_row, b*n_row+1)
-        show_image(img_c[b])
-        plt.subplot(B, n_row, b*n_row+2)
-        show_image(img_t[b])
-        if n_row < 3:
-            continue
-        plt.subplot(B, n_row, b*n_row+3)
-        show_image(img_p[b])
+        _img_file = f"{p.parent}/{p.stem}-b{b:05d}{p.suffix}"
+        plt.clf()
+        plt.title(title)
+        for idx, y in enumerate(ys):
+            plt.subplot(1, 3, idx+1)
+            show_image(y[b])
+        plt.savefig(_img_file)
+
+
     if view:
         plt.show()
     else:
@@ -168,7 +172,6 @@ def show_image(img):
 
 
 if __name__ == "__main__":
-    import pathlib
     device = torch.device("cuda:1")
 
     train_npr = NPMnistReader(batch_size=8, testing=False, device=device)

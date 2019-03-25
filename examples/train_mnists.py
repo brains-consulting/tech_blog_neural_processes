@@ -130,7 +130,7 @@ class Trainer(object):
             img_yC = self.train_reader.convert_to_img(xC, yC)
             img_yT = self.train_reader.convert_to_img(xT, yT)
             img_yhat = self.train_reader.convert_to_img(xT, yhatT)
-            show_yimages(img_yC, img_yT, img_yhat, file_name, self.train_params.view)
+            show_yimages(img_yC, img_yT, img_yhat, "yC/yhatT/yT", file_name, self.train_params.view)
 
 
 if __name__ == "__main__":
