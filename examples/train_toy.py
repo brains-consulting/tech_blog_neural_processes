@@ -71,7 +71,7 @@ def train(model, optimizer, epoch, npcfg):
         print("convert trainset to images ...")
         file_name = f"img/train-{epoch:05d}.png"
         with torch.no_grad():
-            show_functions(file_name, *testset, yhatT, sgm, npcfg.view)
+            show_functions(file_name, *trainset, yhatT, sgm, npcfg.view)
         p = pathlib.Path(file_name)
         p.parent.mkdir(parents=True, exist_ok=True)
 
