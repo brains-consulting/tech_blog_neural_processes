@@ -63,11 +63,19 @@ def train(model, optimizer, epoch, npcfg):
             loss_meter.reset()
 
     if epoch % npcfg.log_interval == 0:
-        print(f"Train Epoch {epoch}/{npcfg.max_epoch} loss: {loss.item():.6f}")
-        file_name = f"img/test-{epoch:05d}.png"
+        from datetime import datetime
+        nw = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        print(f"{nw} Train Epoch {epoch}/{npcfg.max_epoch} loss: {loss.item():.6f}")
+
         import pathlib
+        print("convert trainset to images ...")
+        file_name = f"img/train-{epoch:05d}.png"
+        show_functions(file_name, *testset, yhatT, sgm, npcfg.view)
         p = pathlib.Path(file_name)
         p.parent.mkdir(parents=True, exist_ok=True)
+
+        print("convert testset to images ...")
+        file_name = f"img/test-{epoch:05d}.png"
         with torch.no_grad():
             yhatT, sgm = model.predict(*testset[:3])
         show_functions(file_name, *testset, yhatT, sgm, npcfg.view)
