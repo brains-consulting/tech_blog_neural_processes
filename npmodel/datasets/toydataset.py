@@ -114,9 +114,11 @@ def show_functions(file_name, context_x, context_y, target_x, target_y, pred_y, 
     yht = pred_y[0, :, 0].cpu().numpy()
     sgm = std[0, :, 0].cpu().numpy()
 
-    plt.plot(xt, yht, 'b', linewidth=2)
-    plt.plot(xt, yt, 'k:', linewidth=2)
-    plt.plot(xc, yc, 'ko', markersize=10)
+    indices_t = xt.argsort()
+    indices_c = xc.argsort()
+    plt.plot(xt[indices_t], yht[indices_t], 'b', linewidth=2)
+    plt.plot(xt[indices_t], yt[indices_t], 'k:', linewidth=2)
+    plt.plot(xc[indices_c], yc[indices_c], 'ko', markersize=10)
     plt.fill_between( xt, yht - sgm, yht + sgm, alpha=0.2, facecolor='#65c9f7', interpolate=True)
 
     # Make the plot pretty
