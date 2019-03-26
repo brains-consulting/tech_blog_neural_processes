@@ -121,8 +121,8 @@ def show_functions(file_name, context_x, context_y, target_x, target_y, pred_y, 
     yt = yt[indices_t]
     yht = yht[indices_t]
     sgm = sgm[indices_t]
-    xc = xt[indices_c]
-    yc = yt[indices_c]
+    xc = xc[indices_c]
+    yc = yc[indices_c]
 
     plt.plot(xt, yht, 'b', linewidth=2)
     plt.plot(xt, yt, 'k:', linewidth=2)
