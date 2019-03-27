@@ -82,7 +82,7 @@ def train(model, optimizer, epoch, npcfg):
             loss_meter_test.update(loss.item())
         try:
             # if visdom server is running, plot loss values
-            plotter.plot("epoch", "loss(test)", "predict", "Epoch - Loss", [epoch], [loss_meter_test.avg], reset=False)
+            plotter.plot("epoch", "loss(test)", "test", "Epoch - Loss", [epoch], [loss_meter_test.avg], reset=False)
         except Exception as e:
             print(e)
         finally:
