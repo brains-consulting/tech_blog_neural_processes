@@ -1,5 +1,6 @@
 import torch
 import torch.utils.data
+import pathlib
 import collections
 from matplotlib import pyplot as plt
 
@@ -106,39 +107,43 @@ def saveimg_xy(name, context_x, context_y, target_x, target_y):
 
 
 def show_functions(file_name, context_x, context_y, target_x, target_y, pred_y, std, view: bool):
-    plt.clf()
-    xc = context_x[0, :, 0].cpu().numpy()
-    yc = context_y[0, :, 0].cpu().numpy()
-    xt = target_x[0, :, 0].cpu().numpy()
-    yt = target_y[0, :, 0].cpu().numpy()
-    yht = pred_y[0, :, 0].cpu().numpy()
-    sgm = std[0, :, 0].cpu().numpy()
+    B = context_x.shape[0]
+    p = pathlib.Path(file_name)
+    for b in range(B):
+        _img_file = f"{p.parent}/{p.stem}-b{b:05d}{p.suffix}"
+        plt.clf()
+        xc = context_x[b, :, 0].cpu().numpy()
+        yc = context_y[b, :, 0].cpu().numpy()
+        xt = target_x[b, :, 0].cpu().numpy()
+        yt = target_y[b, :, 0].cpu().numpy()
+        yht = pred_y[b, :, 0].cpu().numpy()
+        sgm = std[b, :, 0].cpu().numpy()
 
-    # sorted by value
-    indices_t = xt.argsort()
-    indices_c = xc.argsort()
-    xt = xt[indices_t]
-    yt = yt[indices_t]
-    yht = yht[indices_t]
-    sgm = sgm[indices_t]
-    xc = xc[indices_c]
-    yc = yc[indices_c]
+        # sorted by value
+        indices_t = xt.argsort()
+        indices_c = xc.argsort()
+        xt = xt[indices_t]
+        yt = yt[indices_t]
+        yht = yht[indices_t]
+        sgm = sgm[indices_t]
+        xc = xc[indices_c]
+        yc = yc[indices_c]
 
-    plt.plot(xt, yht, 'b', linewidth=2)
-    plt.plot(xt, yt, 'k:', linewidth=2)
-    plt.plot(xc, yc, 'ko', markersize=10)
-    plt.fill_between(xt, yht - sgm, yht + sgm, alpha=0.2, facecolor='#65c9f7', interpolate=True)
+        plt.plot(xt, yht, 'b', linewidth=2)
+        plt.plot(xt, yt, 'k:', linewidth=2)
+        plt.plot(xc, yc, 'ko', markersize=10)
+        plt.fill_between(xt, yht - sgm, yht + sgm, alpha=0.2, facecolor='#65c9f7', interpolate=True)
 
-    # Make the plot pretty
-    plt.yticks([-2, 0, 2], fontsize=16)
-    plt.xticks([-2, 0, 2], fontsize=16)
-    plt.ylim([-2, 2])
-    plt.grid(False)
-    ax = plt.gca()
-    if view:
-        plt.show()
-    else:
-        plt.savefig(f"{file_name}")
+        # Make the plot pretty
+        plt.yticks([-2, 0, 2], fontsize=16)
+        plt.xticks([-2, 0, 2], fontsize=16)
+        plt.ylim([-2, 2])
+        plt.grid(False)
+        ax = plt.gca()
+        if view:
+            plt.show()
+        else:
+            plt.savefig(f"{_img_file}")
 
 
 if __name__ == "__main__":
