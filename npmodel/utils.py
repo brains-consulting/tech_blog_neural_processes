@@ -22,11 +22,11 @@ def print_params(args, g=globals()):
 
 class VisdomPlotterInterface(metaclass=ABCMeta):
     @abstractmethod
-    def plot(self, x_label, y_label, legend_name, title_name, x, y, reset=False):
+    def plot(self, x_label, y_label, trace_name, title_name, x, y, reset=False):
         raise NotImplementedError()
 
     @abstractmethod
-    def scatter(self, x, y, y_label, legend_name, color=(0, 0, 0)):
+    def scatter(self, x, y, y_label, trace_name, color=(0, 0, 0)):
         raise NotImplementedError()
 
 
@@ -36,17 +36,20 @@ class VisdomLinePlotter(VisdomPlotterInterface):
         self.viz = Visdom(port=port, server=server)
         self.env = env_name
         self.plotted_windows = {}
+        self.traces = []
 
-    def plot(self, x_label, y_label, legend_name, title_name, x, y, reset=False):
+    def plot(self, x_label, y_label, trace_name, title_name, x, y, reset=False):
         # X=x if hasattr(x, "__iter__") else numpy.array([x]),
         # Y=y if hasattr(y, "__iter__") else numpy.array([y]),
+        if trace_name not in self.traces:
+            self.traces.append(trace_name)
         params = dict(
             X=x,
             Y=y,
             env=self.env,
-            name=legend_name,
+            name=trace_name,
         )
-        extra = dict(opts=dict(legend=[legend_name],
+        extra = dict(opts=dict(legend=[trace_name],
                                title=title_name,
                                xlabel=x_label,
                                ylabel=y_label,
@@ -64,12 +67,12 @@ class VisdomLinePlotter(VisdomPlotterInterface):
         params.update(extra)
         self.plotted_windows[y_label] = self.viz.line(**params)
 
-    def scatter(self, x, y, y_label, legend_name, color=(0, 0, 0)):
+    def scatter(self, x, y, y_label, trace_name, color=(0, 0, 0)):
         color = numpy.array(color).reshape(-1, 3)
         win = self.plotted_windows[y_label]
         self.viz.scatter(X=x, Y=y,
                          opts=dict(markersize=10, markercolor=color,),
-                         name=legend_name,
+                         name=trace_name,
                          update='append',
                          win=win)
 

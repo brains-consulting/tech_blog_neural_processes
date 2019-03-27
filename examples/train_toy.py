@@ -46,7 +46,7 @@ def train(model, optimizer, epoch, npcfg):
     def loss_closure():
         return loss
     optimizer.step(loss_closure)
-    loss_meter.update(loss.item())
+    loss_meter_train.update(loss.item())
 
     if epoch % 1000 == 0:
         B = min(xC.shape[0], 5)
@@ -55,12 +55,12 @@ def train(model, optimizer, epoch, npcfg):
 
     if epoch % 100 == 0:
         try:
-            # if visdom server running, plot loss values
-            plotter.plot("epoch", "loss", "train", "Epoch - Loss", [epoch], [loss_meter.avg], reset=False)
+            # if visdom server is running, plot loss values
+            plotter.plot("epoch", "loss(train)", "train", "Epoch - Loss", [epoch], [loss_meter_train.avg], reset=False)
         except Exception as e:
             print(e)
         finally:
-            loss_meter.reset()
+            loss_meter_train.reset()
 
     if epoch % npcfg.log_interval == 0:
         from datetime import datetime
@@ -78,6 +78,15 @@ def train(model, optimizer, epoch, npcfg):
         file_name = f"img/test-{epoch:05d}.png"
         with torch.no_grad():
             yhatT, sgm = model.predict(*testset[:3])
+            _, _, loss = model(*testset)
+            loss_meter_test.update(loss.item())
+        try:
+            # if visdom server is running, plot loss values
+            plotter.plot("epoch", "loss(test)", "predict", "Epoch - Loss", [epoch], [loss_meter_test.avg], reset=False)
+        except Exception as e:
+            print(e)
+        finally:
+            loss_meter_test.reset()
         show_functions(file_name, *testset, yhatT, sgm, npcfg.view)
 
 
@@ -142,9 +151,9 @@ if __name__ == "__main__":
     else:
         plotter = utils.FakeVisdomPlotter(env_name='main')
 
-
-    global loss_meter
-    loss_meter = utils.AverageMeter()
+    global loss_meter_train
+    loss_meter_train = utils.AverageMeter()
+    loss_meter_test = utils.AverageMeter()
 
     for epoch in range(1, args.epochs + 1):
         train(model, optimizer, epoch, npcfg)
