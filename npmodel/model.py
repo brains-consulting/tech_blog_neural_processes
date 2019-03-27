@@ -1,3 +1,4 @@
+import numpy
 import torch
 import torch.utils.data
 from torch import nn
@@ -257,9 +258,12 @@ class NPModel(nn.Module):
                 zC = self.get_encoded_sample(xC, yC, qC)
                 yhatT, sgm = self.decode_context(xT, zC)
                 x, indices = xT[bidx, :, 0].sort(dim=-1)
-                p.plot("xT", f"y[{bidx}]", "yhatT", "trainset: x - yhat",
-                       xT[bidx, indices, 0].cpu().numpy(),
-                       yhatT[bidx, indices, 0].cpu().numpy(), reset=True)
+                x = x.cpu().numpy()
+                yh = yhatT[bidx, indices, 0].cpu().numpy()
+                s = sgm[bidx, indices, 0].cpu().numpy()
+                p.plot("xT", f"y[{bidx}]", "yhatT", "trainset: x - yhat", x, yh, reset=True)
+                p.plot("xT", f"y[{bidx}]", "-sgm", "trainset: x - yhat", x, yh-s, reset=False)
+                p.plot("xT", f"y[{bidx}]", "+sgm", "trainset: x - yhat", x, yh+s, reset=False)
                 p.scatter(xT[bidx, indices, 0].cpu().numpy(),
                           yT[bidx, indices, 0].cpu().numpy(), f"y[{bidx}]", "yT")
                 p.scatter(xC[bidx, :, 0].cpu().numpy(),

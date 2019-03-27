@@ -36,36 +36,34 @@ class VisdomLinePlotter(VisdomPlotterInterface):
         self.viz = Visdom(port=port, server=server)
         self.env = env_name
         self.plotted_windows = {}
-        self.traces = []
+        self.traces = {}
 
     def plot(self, x_label, y_label, trace_name, title_name, x, y, reset=False):
-        # X=x if hasattr(x, "__iter__") else numpy.array([x]),
-        # Y=y if hasattr(y, "__iter__") else numpy.array([y]),
-        if trace_name not in self.traces:
-            self.traces.append(trace_name)
+        win_id = y_label
+        if win_id not in self.traces:
+            self.traces[win_id] = []
+        if trace_name not in self.traces[win_id]:
+            self.traces[win_id].append(trace_name)
         params = dict(
             X=x,
             Y=y,
             env=self.env,
             name=trace_name,
         )
-        extra = dict(opts=dict(legend=[trace_name],
+        extra = dict(opts=dict(legend=self.traces[win_id],
                                title=title_name,
                                xlabel=x_label,
                                ylabel=y_label,
                                ))
-        if y_label in self.plotted_windows:  # just at the first time
+        if win_id in self.plotted_windows:  # just at the first time
             _extra = dict(
                 win=self.plotted_windows[y_label],
             )
             if not reset:
-                _extra = dict(
-                    win=self.plotted_windows[y_label],
-                    update='append',
-                )
+                _extra.update(dict(update='append'))
             extra.update(_extra)
         params.update(extra)
-        self.plotted_windows[y_label] = self.viz.line(**params)
+        self.plotted_windows[win_id] = self.viz.line(**params)
 
     def scatter(self, x, y, y_label, trace_name, color=(0, 0, 0)):
         color = numpy.array(color).reshape(-1, 3)
