@@ -48,12 +48,13 @@ def train(model, optimizer, epoch, npcfg):
     optimizer.step(loss_closure)
     loss_meter_train.update(loss.item())
 
-    if epoch % 1000 == 0:
+    loss_interval = max(npcfg.log_interval // 10, 1)
+    if epoch % (loss_interval * 10) == 0:
         B = min(xC.shape[0], 5)
         for bidx in range(B):
             model.plot_prediction(bidx, xC, yC, xT, yT)
 
-    if epoch % 100 == 0:
+    if epoch % loss_interval == 0:
         try:
             # if visdom server is running, plot loss values
             plotter.plot("epoch", "loss(train)", "train", "Epoch - Loss", [epoch], [loss_meter_train.avg], reset=False)
