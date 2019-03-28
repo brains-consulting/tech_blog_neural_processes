@@ -27,7 +27,7 @@ def get_args():
                         help='random seed (default: 777)')
     parser.add_argument('--log-interval', type=int, default=10, metavar='N',
                         help='how many batches to wait before logging training status (default: 10)')
-    parser.add_argument('--dataset', type=str, default="mnist", choices=["mnist", "fashion", "kmnist", "emnist"],
+    parser.add_argument('--dataset', type=str, default="mnist", choices=["mnist", "fashion", "kmnist"],
                         help='dataset name for the several mnist datasets (default: "mnist")')
     parser.add_argument('--fix-iter', type=int, default=1000, metavar='N',
                         help='the number of training iteration with a fixed sampling dataset/imageset batch'
