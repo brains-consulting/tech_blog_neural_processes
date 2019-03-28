@@ -45,10 +45,12 @@ class Trainer(object):
     def __init__(self, train_params):
         self.train_params = train_params
 
-        batch_size, device = train_params.batch_size, train_params.device
+        dataset = train_params.dataset
+        batch_size = train_params.batch_size
+        device = train_params.device
         seed = train_params.seed
         params = dict(
-            shuffle=True, seed=seed, mnist_type="mnist", fix_iter=train_params.fix_iter, device=device,
+            shuffle=True, seed=seed, mnist_type=dataset, fix_iter=train_params.fix_iter, device=device,
         )
         self.train_reader = NPMnistReader(batch_size=batch_size, testing=False, **params)
         self.test_reader = NPMnistReader(batch_size=batch_size, testing=True, **params)
@@ -144,10 +146,10 @@ if __name__ == "__main__":
 
     TrainParameters = collections.namedtuple(
         "TrainParameters",
-        ("batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "visdom", "seed", "view", "device")
+        ("dataset", "batch_size", "env_name", "log_interval", "max_epoch", "fix_iter", "visdom", "seed", "view", "device")
     )
     train_params = TrainParameters(
-        batch_size=args.batch_size, env_name="main",
+        dataset=args.dataset, batch_size=args.batch_size, env_name="main",
         log_interval=args.log_interval, max_epoch=args.epochs, fix_iter=args.fix_iter, visdom=args.visdom,
         seed=args.seed, view=args.view, device=device
     )
