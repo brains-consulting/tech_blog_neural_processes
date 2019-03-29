@@ -14,24 +14,38 @@ pip install git+https://github.com/brains-consulting/tech_blog_neural_processes
 clone the repository
 ```bash
 git clone https://github.com/brains-consulting/tech_blog_neural_processes
-cd examples
 ```
 
 ### Toy dataset
 run the toy dataset sample (imitated deepmind's implementation)
 ```bash
+cd $(git rev-parse --show-toplevel)/examples
 python train_toy.py --epochs=20000 --log-interval=1000
 ```
 
 ### MNIST
 run the mnist dataset sample
 ```bash
-python train_toy.py --lr=0.001 --batch-size=30 --epochs=500 --log-interval=100 --fix-iter=100 --dataset="mnist"
+cd $(git rev-parse --show-toplevel)/examples
+python train_mnists.py --lr=0.001 --batch-size=100 --epochs=300 --log-interval=100 --fix-iter=100 --seed=123 --dataset="mnist"
 ```
 
 ### Fashion-MNIST
 run the fashion-mnist dataset sample
 ```bash
-python train_toy.py --lr=0.001 --batch-size=30 --epochs=500 --log-interval=100 --fix-iter=100 --dataset="fashion"
+cd $(git rev-parse --show-toplevel)/examples
+python train_mnists.py --lr=0.001 --batch-size=100 --epochs=300 --log-interval=100 --fix-iter=100 --seed=123 --dataset="fashion"
 ```
 
+### Kuzushiji-MNIST
+run the fashion-mnist dataset sample
+```bash
+cd $(git rev-parse --show-toplevel)/examples
+python train_mnists.py --lr=0.001 --batch-size=100 --epochs=300 --log-interval=100 --fix-iter=100 --seed=123 --dataset="kuzushiji"
+```
+
+## run visdom server
+you may run the visdom server on another terminal
+```bash
+sh $(git rev-parse --show-toplevel)/bin/visdom.sh
+```
