@@ -1,6 +1,10 @@
 # tech blog neural processes
 An implementation of the Neural Processes
-tech blog: https://blog.brains-consulting.tech/
+on our tech blog: https://blog.brains-consulting.tech/entry/2019/03/29/180000
+
+See Also:
+- https://blog.brains-consulting.tech/entry/2019/03/04/120000
+- https://blog.brains-consulting.tech/
 
 ## Usage
 install the package
