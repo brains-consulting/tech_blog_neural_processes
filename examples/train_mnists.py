@@ -101,7 +101,7 @@ class Trainer(object):
             nw = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             print(f"{nw} Train Epoch {epoch:05d}/{train_params.max_epoch:05d} loss: {self.loss_meter.avg:.6f}")
 
-            # if visdom server running, plot loss values
+            # if visdom server is running, plot loss values
             self.plotter.plot("epoch", "loss", "train", "Epoch - Loss", [epoch], [self.loss_meter.avg], reset=False)
         except Exception as e:
             print(traceback.format_exc(chain=e))
