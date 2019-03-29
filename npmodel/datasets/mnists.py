@@ -57,7 +57,7 @@ class NPMnistReader(object):
             "mnist": MNIST,
             "fashion": FashionMNIST,
             "emnist": EMNIST,
-            "kmnist": KMNIST,
+            "kuzushiji": KMNIST,
         }
         self.mnist = mnist_classes[mnist_type](root="mnist", train=(not testing), download=True)
         self.fix_iter = fix_iter
